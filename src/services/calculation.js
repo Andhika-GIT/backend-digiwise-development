@@ -1,9 +1,10 @@
 // import { CustomError } from "../pkg/customError.js";
-import { developGetQuestionByIdRepo } from "../repository/developQuestionRepo.js";
+import { developGetQuestionByIdRepo } from '../repository/developQuestionRepo.js';
+import { developUpdateLevelUserRepo } from '../repository/developUserRepo.js';
 
 export const compareAnswer = async (answerUser) => {
   let usersScore = 0;
-  for (let i = 0; i <= answerUser.length; i++) {
+  for (let i = 0; i < answerUser.length; i++) {
     try {
       console.log(8989, answerUser);
 
@@ -20,9 +21,12 @@ export const compareAnswer = async (answerUser) => {
 
         if (Array.isArray(userAnswer)) {
           // Jika userAnswer adalah array, lakukan looping
+          const formattedResult = dataRealAnswer.split(' | ');
           let isAnswerCorrect = true;
+          console.log(formattedResult, 2024);
           for (let j = 0; j < userAnswer.length; j++) {
-            if (!dataRealAnswer.includes(userAnswer[j])) {
+            if (formattedResult[j] !== userAnswer[j]) {
+              // sekarang pinjam dulu 100
               isAnswerCorrect = false;
               break;
             }
@@ -39,20 +43,22 @@ export const compareAnswer = async (answerUser) => {
         } else {
           console.log(usersScore, 2020);
         }
-
-        // if (dataRealAnswer == userAnswer) {
-        //   usersScore += 20;
-        //   // results.push(idQuestion);
-        //   console.log(usersScore, 1919);
-        // } else {
-        //   console.log(usersScore, 2020);
-        // }
       }
     } catch (error) {
       throw error;
     }
   }
-  return { usersScore };
+
+  passedCheck(usersScore);
+  // pass = true / false
+
+  return usersScore;
+};
+
+export const passedCheck = (scoreResult, user_id) => {
+  if (scoreResult >= 80) {
+    developUpdateLevelUserRepo(user_id);
+  }
 };
 
 // // Fungsi untuk menghitung skor level
